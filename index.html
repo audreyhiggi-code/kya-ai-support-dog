@@ -43,7 +43,7 @@ body{background:#f9e4e8}.app{max-width:1580px;padding:0;background:#fff4f5;overf
 .logo{font-size:47px;white-space:nowrap}.logo small{margin-left:3px;font-size:14px}.char[role="button"]:focus-visible{outline:4px solid var(--pink);outline-offset:2px}.stage[data-background="custom"]{background-size:cover;background-position:center}
 @media(max-width:680px){.logo{font-size:32px}.logo small{font-size:11px}.background-choices{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.dog{animation:none!important}}
-</style></head><body>
+</style><link rel="stylesheet" href="enhancements.css"></head><body>
 <div class="app"><div class="main">
 <aside class="sidebar"><div class="logo">My AI Friend♡<small>Choose your companion</small></div><nav>
 <button onclick="closeM()">🏠 Home</button><button onclick="openM('talk')">🐾 Talk to <span class="cn">Kya</span></button><button onclick="openM('calm')">🫁 Help Me Calm Down</button><button onclick="openM('feel')">❤️ My Feelings</button><button onclick="openM('games')">🎮 Games</button><button onclick="openM('journal')">📔 Journal</button><button onclick="openM('learn')">🎨 Activities Together</button><button onclick="openM('settings')">⚙️ Settings</button>
@@ -94,4 +94,4 @@ function quiz(k){let q=Q[k],h=window.quizOut||window.learnOut;h.innerHTML=`<div 
 function homework(){learnOut.innerHTML="<div class=result>1. What is the question asking?<br>2. What information do you have?<br>3. What is one small first step?</div>"}function showStrengths(){let g={};skills.filter(x=>x.correct).forEach(x=>g[x.skill]=(g[x.skill]||0)+1);let h=window.strengthOut||window.learnOut;if(h)h.innerHTML=Object.keys(g).length?Object.entries(g).map(x=>`<div class=result>⭐ <b>${x[0]}</b>: ${x[1]} successful practice moment(s)</div>`).join(""):"Complete activities and strengths will appear here."}
 function report(){if(!window.reportOut)return;let cut=Date.now()-7*86400000,s=skills.filter(x=>new Date(x.date).getTime()>=cut),f=feelings.filter(x=>new Date(x.date).getTime()>=cut);reportOut.innerHTML=`<div class=result><b>This week:</b><br>${s.length} learning practice activities<br>${f.length} feelings check-ins</div>`}
 document.querySelectorAll(".char").forEach(card=>{card.setAttribute("role","button");card.tabIndex=0;card.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();card.click()}})});setTheme(localStorage.companionTheme||"rose");restoreBackground();refresh();
-</script></body></html>
+</script><script src="enhancements.js"></script></body></html>
