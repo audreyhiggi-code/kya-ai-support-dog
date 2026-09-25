@@ -3,22 +3,63 @@
 const $ = id => document.getElementById(id);
 const companions = [
   {name:'Kya',role:'Support Dog',icon:'🐶'}, {name:'Luna',role:'Cat',icon:'🐱'},
-  {name:'Buddy',role:'Dog',icon:'🐕'}, {name:'Audrey',role:'Helper',icon:'👩'},
-  {name:'Ethan',role:'Encourager',icon:'🧑'}, {name:'Nova',role:'Dreamer',icon:'✨'},
-  {name:'Remi',role:'Brave One',icon:'🦊'}, {name:'Ziggy',role:'Explorer',icon:'🦓'}
+  {name:'Buddy',role:'Dog',icon:'🐕'}, {name:'Audrey',role:'Creative Kid',icon:'👧'},
+  {name:'Ethan',role:'Friendly Kid',icon:'🧑'}, {name:'Nova',role:'Dreamer Kid',icon:'👧'},
+  {name:'Remi',role:'Brave Kid',icon:'🧑'}, {name:'Ziggy',role:'Explorer Kid',icon:'🧒'}
 ];
+const kidLooks = {
+  Audrey:{skin:'#d89c72',hair:'#472b2b',hairStyle:'long'},
+  Ethan:{skin:'#a56643',hair:'#24232c',hairStyle:'short'},
+  Nova:{skin:'#f1c3a1',hair:'#75462d',hairStyle:'curly'},
+  Remi:{skin:'#704a3b',hair:'#171b2b',hairStyle:'curly'},
+  Ziggy:{skin:'#c78c66',hair:'#3b2b31',hairStyle:'short'}
+};
+const looks = {
+  'My own style':{color:'#a76ccd',outfit:'tee',accessory:'none'},
+  'Punk Rocker':{color:'#912c7c',outfit:'jacket',accessory:'headphones'},
+  Sporty:{color:'#398dbc',outfit:'hoodie',accessory:'cap'},
+  Dreamer:{color:'#9881db',outfit:'tee',accessory:'star'},
+  Artist:{color:'#e98b5b',outfit:'jacket',accessory:'glasses'},
+  Superhero:{color:'#e45476',outfit:'cape',accessory:'star'},
+  Cozy:{color:'#72a58b',outfit:'hoodie',accessory:'none'}
+};
+const wardrobe = Object.fromEntries(Object.keys(kidLooks).map(name=>[name,{vibe:'My own style',outfit:'tee',accessory:'none'}]));
+function kidSVG(name){
+  const kid=kidLooks[name], choice=wardrobe[name], color=looks[choice.vibe].color;
+  const backHair=kid.hairStyle==='long'?`<path d="M98 112Q96 35 159 35Q225 36 223 123L228 231H97Z" fill="${kid.hair}"/>`:'';
+  const curls=kid.hairStyle==='curly'?Array.from({length:9},(_,i)=>`<circle cx="${107+i*13}" cy="${69-Math.sin(i/8*Math.PI)*25}" r="20" fill="${kid.hair}"/>`).join(''):'';
+  const frontHair=kid.hairStyle==='short'?`<path d="M104 93Q92 38 150 39Q207 27 214 88Q181 87 171 65Q140 93 104 93Z" fill="${kid.hair}"/>`:kid.hairStyle==='long'?`<path d="M105 100Q91 45 151 39Q204 36 216 96Q196 85 185 68Q160 91 105 100Z" fill="${kid.hair}"/>`:curls;
+  const cape=choice.outfit==='cape'?'<path d="M103 232L63 364Q160 393 258 364L215 232Z" fill="#e65f79"/>':'';
+  const outfit=choice.outfit==='jacket'?`<path d="M100 245Q159 218 220 245L260 390H60Z" fill="${color}"/><path d="M140 235L160 301L178 235L193 390H125Z" fill="#fff5e9"/><path d="M160 300V389" stroke="#694261" stroke-width="3"/>`:choice.outfit==='hoodie'?`<path d="M99 248Q159 214 222 248L258 390H62Z" fill="${color}"/><path d="M117 245Q160 301 203 245" fill="none" stroke="#d9ecf5" stroke-width="13"/><path d="M142 310Q160 330 178 310" fill="none" stroke="#fff" stroke-width="4"/>`:`<path d="M100 248Q160 214 220 248L261 390H59Z" fill="${color}"/><path d="M135 249Q160 273 185 249" fill="none" stroke="#f8e9ff" stroke-width="5"/><path d="M161 289l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2Z" fill="#fff1b9"/>`;
+  const accessories={none:'',headphones:'<path d="M91 134V108Q91 32 160 32Q229 32 229 108V134" fill="none" stroke="#2c2b43" stroke-width="14"/><rect x="81" y="112" width="21" height="53" rx="10" fill="#eeb8e9"/><rect x="218" y="112" width="21" height="53" rx="10" fill="#eeb8e9"/>',glasses:'<rect x="105" y="124" width="46" height="32" rx="13" fill="none" stroke="#493248" stroke-width="5"/><rect x="169" y="124" width="46" height="32" rx="13" fill="none" stroke="#493248" stroke-width="5"/><path d="M151 136h18" stroke="#493248" stroke-width="5"/>',star:'<path d="M205 69l6 12 14 2-10 10 2 14-12-7-13 7 3-14-10-10 14-2Z" fill="#ffe37f" stroke="#9b6795" stroke-width="2"/>',cap:'<path d="M101 98Q100 48 160 44Q219 48 219 98Z" fill="#3282ac"/><path d="M103 93Q170 78 238 97Q225 112 165 112Q120 111 103 93Z" fill="#286d91"/>'};
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 400" role="img"><defs><radialGradient id="glow"><stop stop-color="#fff9f3"/><stop offset="1" stop-color="#f6d9ea"/></radialGradient></defs><rect width="320" height="400" rx="40" fill="url(#glow)"/><circle cx="160" cy="160" r="133" fill="#fff" opacity=".45"/>${backHair}${cape}<path d="M130 218h60v50h-60z" fill="${kid.skin}"/>${outfit}<ellipse cx="160" cy="142" rx="62" ry="84" fill="${kid.skin}"/><ellipse cx="99" cy="153" rx="10" ry="17" fill="${kid.skin}"/><ellipse cx="221" cy="153" rx="10" ry="17" fill="${kid.skin}"/>${frontHair}<path d="M123 141q12-10 25 0m24 0q13-10 25 0" fill="none" stroke="#422c38" stroke-width="5" stroke-linecap="round"/><path d="M147 187q13 12 27 0" fill="none" stroke="#843e54" stroke-width="4" stroke-linecap="round"/><circle cx="119" cy="174" r="10" fill="#db777d" opacity=".23"/><circle cx="201" cy="174" r="10" fill="#db777d" opacity=".23"/>${accessories[choice.accessory]}</svg>`;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+function currentLook(){return wardrobe[companions[state.companion].name]}
+function syncStyleControls(){
+  const name=companions[state.companion].name, isKid=!!kidLooks[name];
+  $('kidStyleControls').hidden=!isKid;
+  if(isKid){const look=wardrobe[name];$('vibeSetting').value=look.vibe;$('outfitSetting').value=look.outfit;$('accessorySetting').value=look.accessory}
+  $('companionSetting').value=String(state.companion);
+}
+
 const feelings = [{name:'Happy',icon:'😊'},{name:'Okay',icon:'😐'},{name:'Sad',icon:'😢'},{name:'Angry',icon:'😡'},{name:'Worried',icon:'😟'}];
 const state = {companion:0,name:'Kya',personality:'Calm & gentle',voiceURI:'',speed:1,feeling:null,checkins:[],calms:[],practice:[],recognition:null,session:null,step:0,game:null};
 function say(message){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(message);utterance.rate=state.speed;const chosen=speechSynthesis.getVoices().find(v=>v.voiceURI===state.voiceURI);if(chosen)utterance.voice=chosen;utterance.onstart=()=>setStatus('Talking');utterance.onend=()=>setStatus('Ready');utterance.onerror=()=>setStatus('Ready');speechSynthesis.speak(utterance)}
-function setStatus(status){$('status').textContent='● '+(status==='Ready'?'Ready to talk':status==='Listening'?'Listening…':'Talking…');$('character').classList.toggle('listening',status==='Listening');$('character').classList.toggle('talking',status==='Talking')}
+function setStatus(status){$('status').textContent='● '+(status==='Ready'?'Ready to talk':status==='Listening'?'Listening…':'Talking…');$('character').classList.toggle('listening',status==='Listening');$('character').classList.toggle('talking',status==='Talking');$('kidCharacter').classList.toggle('listening',status==='Listening');$('kidCharacter').classList.toggle('talking',status==='Talking')}
 function respond(message,spoken=true){$('bubble').textContent=message;addChat(state.name,message,false);if(spoken)say(message)}
 function addChat(who,message,mine){const line=document.createElement('div');line.className='chatmsg'+(mine?' mine':'');const label=document.createElement('span');label.textContent=who;line.append(label,document.createTextNode(message));$('chatLog').append(line);$('chatLog').scrollTop=$('chatLog').scrollHeight}
 function replyFor(message){const m=message.toLowerCase();if(/(hurt myself|kill myself|suicide|self harm|not safe)/.test(m))return "I'm glad you told me. Please tell a trusted adult with you right now. If someone is in immediate danger, call local emergency services.";if(/(sad|bad day|cry|upset|lonely)/.test(m))return "I'm sorry today feels hard. Would you like to tell me what happened, or take a quiet breath with me?";if(/(scared|worried|anxious|nervous)/.test(m))return "That sounds worrying. Let's slow down together. What's one thing that might help you feel safer right now?";if(/(angry|mad|frustrat)/.test(m))return "It makes sense to need a pause when you're frustrated. Want to try breathing or tell me what happened?";if(/(homework|school|math|read)/.test(m))return "We can take it one step at a time. What is the first part you understand?";if(/(happy|good|excited|great)/.test(m))return "I'm happy to hear that! What was the best part?";return state.personality==='Silly & fun'?"I'm here with my listening ears! Tell me a little more. 🐾":"I'm listening. Would you like to tell me more about that?"}
 function show(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===view));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
-function renderCompanions(){const box=$('companions');box.replaceChildren();companions.forEach((c,i)=>{const button=document.createElement('button');button.className='companion'+(state.companion===i?' active':'');button.setAttribute('aria-pressed',String(state.companion===i));const icon=document.createElement('span');icon.className='avatar';icon.textContent=c.icon;const title=document.createElement('strong');title.textContent=c.name;const role=document.createElement('small');role.textContent=c.role;button.append(icon,title,role);button.onclick=()=>{stopAll();state.companion=i;state.name=c.name;updateCompanion();renderCompanions()};box.append(button)})}
-function updateCompanion(){$('companionTitle').textContent=state.name;$('micBtn').textContent='🎙 Talk to '+state.name;$('nameSetting').value=state.name;$('character').hidden=state.companion!==0;$('companionIcon').hidden=state.companion===0;$('companionIcon').textContent=companions[state.companion].icon;$('bubble').textContent=`Hi, I’m ${state.name}. Want to tell me about your day?`}
-renderCompanions();updateCompanion();
+function selectCompanion(i){stopAll();state.companion=i;state.name=companions[i].name;updateCompanion();renderCompanions();syncStyleControls()}
+function renderCompanions(){const box=$('companions');box.replaceChildren();companions.forEach((c,i)=>{const button=document.createElement('button');button.className='companion'+(state.companion===i?' active':'');button.setAttribute('aria-pressed',String(state.companion===i));const icon=document.createElement('span');icon.className='avatar';if(kidLooks[c.name]){const img=document.createElement('img');img.src=kidSVG(c.name);img.alt='';icon.append(img)}else icon.textContent=c.icon;const title=document.createElement('strong');title.textContent=c.name;const role=document.createElement('small');role.textContent=c.role;button.append(icon,title,role);button.onclick=()=>selectCompanion(i);box.append(button)})}
+function updateCompanion(){const c=companions[state.companion],isKid=!!kidLooks[c.name];$('companionTitle').textContent=state.name;$('micBtn').textContent='🎙 Talk to '+state.name;$('nameSetting').value=state.name;$('character').hidden=state.companion!==0;$('companionIcon').hidden=state.companion===0||isKid;$('kidCharacter').hidden=!isKid;if(isKid){$('kidPortrait').src=kidSVG(c.name);$('kidPortrait').alt=`Illustrated kid companion ${state.name}, dressed in ${currentLook().vibe} style with ${currentLook().accessory} accessory`}$('companionIcon').textContent=c.icon;$('bubble').textContent=`Hi, I’m ${state.name}. Want to tell me about your day?`}
+companions.forEach((c,i)=>$('companionSetting').add(new Option(c.name+' — '+c.role,String(i))));
+$('companionSetting').onchange=()=>selectCompanion(Number($('companionSetting').value));
+$('vibeSetting').onchange=()=>{const look=currentLook(),preset=looks[$('vibeSetting').value];look.vibe=$('vibeSetting').value;look.outfit=preset.outfit;look.accessory=preset.accessory;syncStyleControls();updateCompanion();renderCompanions()};
+for(const field of ['outfit','accessory'])$(field+'Setting').onchange=()=>{currentLook()[field]=$(field+'Setting').value;updateCompanion();renderCompanions()};
+renderCompanions();updateCompanion();syncStyleControls();
 $('chatForm').onsubmit=e=>{e.preventDefault();const text=$('chatInput').value.trim();if(!text)return;addChat('You',text,true);$('chatInput').value='';respond(replyFor(text))};
 const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
 $('micBtn').onclick=()=>{if(!Recognition){$('bubble').textContent='Voice listening is unavailable in this browser. You can type to me instead.';return}stopAll();const rec=new Recognition();state.recognition=rec;rec.lang=document.documentElement.lang||'en-US';rec.interimResults=false;rec.onstart=()=>setStatus('Listening');rec.onresult=e=>{const heard=e.results[0][0].transcript;addChat('You',heard,true);respond(replyFor(heard))};rec.onerror=e=>{$('bubble').textContent=e.error==='not-allowed'?'Please allow microphone access, or type your message.':'I couldn’t hear that. Please try again or type your message.';setStatus('Ready')};rec.onend=()=>{if($('status').textContent.includes('Listening'))setStatus('Ready');state.recognition=null};try{rec.start()}catch{setStatus('Ready')}};

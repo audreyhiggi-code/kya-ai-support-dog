@@ -8,7 +8,7 @@ Open `index.html` in a modern browser, or serve the directory with `python3 -m h
 
 ## What works now
 
-- Choose among eight companions and adjust name, personality, voice, speed, and page background.
+- Choose among eight companions (Kya, two animals, and five illustrated kid characters) on the home screen or in Customize. Select a kid style such as Punk Rocker, Sporty, Dreamer, Artist, Superhero, or Cozy; change the outfit and accessory separately. The choices appear on the portrait and companion cards during this visit. Adjust name, personality, voice, speed, and page background. The My Feelings check-in is separate from style choices.
 - Type or speak to a companion. Responses are **preset and keyword based**, not a conversational AI model. Stop speaking at any time.
 - Record feelings and intensity for the current visit; try breathing, grounding, and quiet time, then record how it felt afterward.
 - Practice six learning games and three extra activities; view strengths from successful practice.
