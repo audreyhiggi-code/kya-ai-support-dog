@@ -5,7 +5,7 @@ body.theme-forest{--enh-accent:#43875c;--enh-deep:#28613d;--enh-bg:#effaf1;--enh
 body.theme-violet{--enh-accent:#8a64c7;--enh-deep:#5d3e96;--enh-bg:#f6f1ff;--enh-wash:#ebe1ff}
 body.theme-sunshine{--enh-accent:#dc8b25;--enh-deep:#9c5e0f;--enh-bg:#fff9e9;--enh-wash:#ffedbc}
 body{background:var(--enh-bg)!important;transition:background .25s}
-.enh-nav{display:grid;gap:7px;margin-top:8px}
+.enh-nav{display:none!important}
 .enh-nav button{border:1px solid #f0d8e1;border-radius:15px;padding:12px;background:var(--enh-wash);color:var(--enh-deep);font-weight:800;text-align:left;cursor:pointer}
 .enh-view{display:none}.enh-view.active{display:block}
 .enh-panel{background:#fff;border:1px solid #efd4df;border-radius:30px;padding:clamp(24px,5vw,52px);box-shadow:0 16px 45px #7c35501c}
