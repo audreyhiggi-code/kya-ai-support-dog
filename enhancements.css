@@ -61,3 +61,27 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 @keyframes accessoryFocus{0%{box-shadow:0 0 0 0 #d72d6866}45%{box-shadow:0 0 0 8px #d72d6826}100%{box-shadow:0 12px 30px #69334b30}}
 @media(min-width:1101px){.bubble{right:305px;width:23%;min-width:250px}.controls,.status{left:48%}}
 @media(max-width:680px){.accessory-panel{right:8px;top:auto;bottom:10px;width:48%;max-height:270px}.bubble{right:3%;width:44%}}
+
+
+/* Animated companion polish */
+.friend-portrait.live-animal{position:relative;isolation:isolate;display:grid;place-items:center;overflow:visible}
+.animal-svg{overflow:visible;transform-origin:50% 82%;animation:companionFloat 3.2s ease-in-out infinite;will-change:transform}
+.animal-svg .tail{transform-box:fill-box;transform-origin:10% 70%;animation:tailWag 1.8s ease-in-out infinite}
+.animal-svg .ears{transform-box:fill-box;transform-origin:50% 70%;animation:earBounce 2.8s ease-in-out infinite}
+.animal-svg .blink{transform-box:fill-box;transform-origin:center;animation:eyeBlink 4.8s ease-in-out infinite}
+.animal-svg.human{animation:companionFloat 3.6s ease-in-out infinite}
+.stage.listening .animal-svg{animation:companionWiggle .7s ease-in-out infinite}
+.stage.talking .animal-svg{animation:talkBounce .48s ease-in-out infinite alternate}
+.stage.listening .animal-svg .tail{animation:tailWag .45s ease-in-out infinite}
+.stage:hover .animal-svg{animation-duration:2.2s}
+.accessory-layer{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:visible}
+.equipped-accessory{position:absolute;display:block;z-index:2;line-height:1;font-family:Arial,sans-serif;filter:drop-shadow(0 4px 3px #63354a40);animation:accessoryBob 2.5s ease-in-out infinite}
+.equipped-accessory.face{font-size:40px}.equipped-accessory.head{font-size:52px}.equipped-accessory.neck{font-size:48px}.equipped-accessory.body{font-size:58px}.equipped-accessory.legs{font-size:50px}.equipped-accessory.feet{font-size:44px}
+@keyframes companionFloat{0%,100%{transform:translateY(0) rotate(-.6deg) scale(1)}50%{transform:translateY(-11px) rotate(.8deg) scale(1.015)}}
+@keyframes companionWiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@keyframes talkBounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-6px) scale(1.015)}}
+@keyframes tailWag{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(8deg)}}
+@keyframes earBounce{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg)}}
+@keyframes eyeBlink{0%,45%,48%,100%{transform:scaleY(1)}46%,47%{transform:scaleY(.08)}}
+@keyframes accessoryBob{0%,100%{translate:0 0}50%{translate:0 -2px}}
+@media(prefers-reduced-motion:reduce){.animal-svg,.animal-svg .tail,.animal-svg .ears,.animal-svg .blink,.equipped-accessory{animation:none!important}}
