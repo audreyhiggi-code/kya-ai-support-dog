@@ -92,7 +92,58 @@ async function uploadBackground(file){if(!file)return;const message=document.get
 async function restoreBackground(){const choice=localStorage.companionBackground||"cozy";if(choice==="custom"){try{const file=await loadBackgroundFile();if(file){displayCustomBackground(file);return}}catch(e){}setBackground("cozy")}else setBackground(choice)}
 function loadVoices(){voices=speechSynthesis.getVoices();if(window.vsel)vsel.innerHTML=voices.map((v,i)=>`<option value=${i}>${v.name} — ${v.lang}</option>`).join("")}if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;
 function speak(t){if(!("speechSynthesis"in window))return;stage.classList.add("talking");status.textContent="💗 Talking...";let u=new SpeechSynthesisUtterance(t);if(window.vsel&&voices[+vsel.value])u.voice=voices[+vsel.value];u.rate=window.rate?+rate.value:.95;u.onend=()=>{stage.classList.remove("talking");status.textContent="💗 Ready..."};speechSynthesis.cancel();speechSynthesis.speak(u)}
-function stopVoice(){speechSynthesis.cancel();stage.classList.remove("talking","listening");status.textContent="💗 Ready..."}function listenDemo(){stage.classList.add("listening");status.textContent="🎵 Listening...";setTimeout(()=>{stage.classList.remove("listening");speak("I am listening. Tell me what is on your mind.")},1500)}function preview(){speak("Hi! I'm "+companion+". We can talk, learn, play, or calm down together.")}
+let recognition=null;
+function stopVoice(){if(recognition){try{recognition.stop()}catch(e){}recognition=null}if("speechSynthesis"in window)speechSynthesis.cancel();stage.classList.remove("talking","listening");status.textContent="💗 Ready..."}
+function companionReply(text){
+  const t=text.toLowerCase();
+  if(/sad|upset|cry|lonely|hurt/.test(t))return "I'm glad you told me. You don't have to handle that feeling all by yourself. We can take a slow breath together, or you can tell me a little more.";
+  if(/angry|mad|frustrat|annoy/.test(t))return "It sounds like something is really bothering you. Let's pause, take one slow breath, and then you can tell me what happened.";
+  if(/worried|worry|nervous|scared|afraid|anxious/.test(t))return "It's okay to feel worried. I'm here with you. Let's slow things down and take this one small step at a time.";
+  if(/happy|excited|good|great|fun/.test(t))return "I love hearing that! Tell me more about what made your day feel good.";
+  if(/school|homework|math|reading|spell/.test(t))return "I can help with that. Tell me what you're working on, and we'll take it one step at a time.";
+  if(/hello|hi|hey/.test(t))return "Hi! I'm happy you're here. What would you like to talk about?";
+  if(/thank/.test(t))return "You're very welcome. I'm always happy to listen.";
+  return "I hear you. Thank you for sharing that with me. Would you like to tell me a little more?";
+}
+function listenDemo(){
+  stopVoice();
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    status.textContent="💗 Voice not available";
+    speak("I can talk out loud, but speech recognition is not available in this browser. Please try Chrome or Edge.");
+    return;
+  }
+  recognition=new SR();
+  recognition.lang="en-US";
+  recognition.interimResults=false;
+  recognition.continuous=false;
+  recognition.maxAlternatives=1;
+  recognition.onstart=()=>{stage.classList.add("listening");status.textContent="🎵 Listening...";};
+  recognition.onresult=(event)=>{
+    const heard=event.results[0][0].transcript.trim();
+    stage.classList.remove("listening");
+    const bubble=document.querySelector(".bubble");
+    if(bubble)bubble.innerHTML="<b>🐾 "+companion+"</b><br><br><strong>You said:</strong> "+heard;
+    setTimeout(()=>speak(companionReply(heard)),250);
+  };
+  recognition.onerror=(event)=>{
+    stage.classList.remove("listening");
+    recognition=null;
+    if(event.error==="not-allowed"||event.error==="service-not-allowed"){
+      status.textContent="🎙️ Microphone permission needed";
+      speak("Please allow microphone access so I can hear you.");
+    }else if(event.error==="no-speech"){
+      status.textContent="💗 I didn't hear you";
+      speak("I didn't hear anything yet. Press the microphone and try again.");
+    }else{
+      status.textContent="💗 Voice error";
+      speak("I had trouble hearing you. Please try the microphone again.");
+    }
+  };
+  recognition.onend=()=>{stage.classList.remove("listening");if(status.textContent==="🎵 Listening...")status.textContent="💗 Ready...";};
+  try{recognition.start()}catch(e){recognition=null;stage.classList.remove("listening");status.textContent="💗 Ready...";}
+}
+function preview(){speak("Hi! I'm "+companion+". We can talk, learn, play, or calm down together.")}
 function calm(t){out.innerHTML=`<div class=result>${t}</div>`;speak(t)}function saveFeel(){if(!emo){msg.textContent="Choose a feeling first.";return}feelings.push({date:new Date().toISOString(),emotion:emo,level:level.value,what:what.value,help:help.value});localStorage.feelings=JSON.stringify(feelings);msg.textContent="Saved 💗"}function saveJournal(){let j=JSON.parse(localStorage.journals||"[]");j.push({date:new Date().toISOString(),text:jtext.value});localStorage.journals=JSON.stringify(j);jmsg.textContent="Saved privately on this device."}
 const Q={
 reading:[
