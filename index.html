@@ -54,7 +54,7 @@ body{background:#f9e4e8}.app{width:min(96vw,1840px);max-width:1840px;margin:2vh 
 <script>
 let companion="Kya",emo="",skills=JSON.parse(localStorage.skills||"[]"),feelings=JSON.parse(localStorage.feelings||"[]"),voices=[],chatHistory=[];
 const screens={
-talk:`<h2>🎙️ Talk to <span class=cn></span></h2><p>Tell your companion about your day or just have some company.</p><button class=action onclick="speak('I am right here with you. What would you like to talk about?')">🔊 Talk Back</button>`,
+talk:`<h2>💬 Talk to <span class=cn></span></h2><p>Want to talk without using your microphone? Type a message below and your companion will answer.</p><textarea id="textChatInput" rows="4" placeholder="Type what you want to say..."></textarea><div style="display:flex;gap:8px;flex-wrap:wrap"><button class=action onclick="sendTextChat()">💬 Send Message</button><button class=softbtn onclick="speak('I am right here with you. What would you like to talk about?')">🔊 Talk Back</button></div><p id="textChatStatus" class=small></p><div id="textChatReply"></div>`,
 calm:`<h2>🫁 Help Me Calm Down</h2><div class=grid><button class=card onclick="calm('Take a slow breath in... and slowly breathe out.')"><b>🌬️ Breathe With Me</b></button><button class=card onclick="calm('Name five things you see, four you can feel, three you hear, two you smell, and one thing that helps you feel cared for.')"><b>🌿 5-4-3-2-1</b></button><button class=card onclick="calm('You do not have to explain anything. I can sit quietly with you.')"><b>🐾 Quiet Time</b></button></div><div id=out></div>`,
 feel:`<h2>❤️ My Feelings</h2><div class=faces><button onclick="emo='Happy'">😊</button><button onclick="emo='Okay'">😐</button><button onclick="emo='Sad'">😢</button><button onclick="emo='Angry'">😡</button><button onclick="emo='Worried'">😟</button></div><select id=level><option>1 - A little</option><option>2</option><option>3 - Medium</option><option>4</option><option>5 - Very big</option></select><textarea id=what placeholder="What happened?"></textarea><textarea id=help placeholder="What helped or might help?"></textarea><button class=action onclick=saveFeel()>Save Check-In</button><p id=msg></p>`,
 games:`<h2>🎮 Educational Games</h2><div class=grid><button class=card onclick="quiz('reading')"><b>🔤 Word Adventure</b>Reading & phonics</button><button class=card onclick="quiz('math')"><b>➕ Number Quest</b>Math</button><button class=card onclick="quiz('memory')"><b>🧠 Memory Challenge</b>Memory & focus</button><button class=card onclick="quiz('sequence')"><b>🔢 Sequencing</b>Order</button><button class=card onclick="quiz('pattern')"><b>🧩 Pattern Detective</b>Patterns</button><button class=card onclick="quiz('spelling')"><b>✏️ Spelling</b>Words</button></div><div id=quizOut></div>`,
@@ -133,6 +133,23 @@ function companionReply(text){
   if(/(bye|goodbye|see you)/.test(t))
     return "Bye for now! I'll be right here when you want some company.";
   return replies[Math.floor(Math.random()*replies.length)];
+}
+async function sendTextChat(){
+  const input=document.getElementById("textChatInput");
+  const statusEl=document.getElementById("textChatStatus");
+  const replyEl=document.getElementById("textChatReply");
+  const message=String(input?.value||"").trim();
+  if(!message)return;
+  if(statusEl)statusEl.textContent="🤖 Thinking...";
+  if(input)input.value="";
+  try{
+    await askKyaAI(message);
+    const bubble=document.querySelector(".bubble");
+    if(replyEl&&bubble)replyEl.innerHTML="<div class=result>"+bubble.innerHTML+"</div>";
+    if(statusEl)statusEl.textContent="💗 Ready";
+  }catch(e){
+    if(statusEl)statusEl.textContent="💗 Ready";
+  }
 }
 async function askKyaAI(heard){
   const message=String(heard||"").trim();
