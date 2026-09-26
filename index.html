@@ -95,8 +95,50 @@ function loadVoices(){voices=speechSynthesis.getVoices();if(window.vsel)vsel.inn
 function speak(t){if(!("speechSynthesis"in window))return;stage.classList.add("talking");status.textContent="💗 Talking...";let u=new SpeechSynthesisUtterance(t);if(window.vsel&&voices[+vsel.value])u.voice=voices[+vsel.value];u.rate=window.rate?+rate.value:.95;u.onend=()=>{stage.classList.remove("talking");status.textContent="💗 Ready..."};speechSynthesis.cancel();speechSynthesis.speak(u)}
 function stopVoice(){speechSynthesis.cancel();stage.classList.remove("talking","listening");status.textContent="💗 Ready..."}function listenDemo(){stage.classList.add("listening");status.textContent="🎵 Listening...";setTimeout(()=>{stage.classList.remove("listening");speak("I am listening. Tell me what is on your mind.")},1500)}function preview(){speak("Hi! I'm "+companion+". We can talk, learn, play, or calm down together.")}
 function calm(t){out.innerHTML=`<div class=result>${t}</div>`;speak(t)}function saveFeel(){if(!emo){msg.textContent="Choose a feeling first.";return}feelings.push({date:new Date().toISOString(),emotion:emo,level:level.value,what:what.value,help:help.value});localStorage.feelings=JSON.stringify(feelings);msg.textContent="Saved 💗"}function saveJournal(){let j=JSON.parse(localStorage.journals||"[]");j.push({date:new Date().toISOString(),text:jtext.value});localStorage.journals=JSON.stringify(j);jmsg.textContent="Saved privately on this device."}
-const Q={reading:["Which word starts like sun?",["Sock","Moon"],0],math:["4 apples plus 3 more equals?",["7","6"],0],memory:["Remember: red, dog, 4. Which was the animal?",["Dog","Red"],0],sequence:["First, second, ...?",["Third","Fifth"],0],pattern:["⭐ 🌙 ⭐ 🌙 ...?",["⭐","🌙"],0],spelling:["Which is correct?",["Friend","Freind"],0]};
-function quiz(k){let q=Q[k],h=window.quizOut||window.learnOut;h.innerHTML=`<div class=result><h3>${q[0]}</h3>${q[1].map((a,i)=>`<button class=softbtn onclick="ans('${k}',${i},${q[2]})">${a}</button>`).join(" ")}<p id=qmsg></p></div>`}function ans(k,i,ok){let c=i===ok;skills.push({date:new Date().toISOString(),skill:k,correct:c});localStorage.skills=JSON.stringify(skills);qmsg.textContent=c?"Great work! ⭐":"Nice try. We can practice again."}
+const Q={
+reading:[
+ ["Which word starts like sun?",["Sock","Moon"],0],
+ ["Which word rhymes with cat?",["Hat","Dog"],0],
+ ["Which word starts with B?",["Ball","Sun"],0],
+ ["Which word is an animal?",["Tiger","Table"],0],
+ ["Which word rhymes with light?",["Night","Tree"],0]
+],
+math:[
+ ["4 apples plus 3 more equals?",["7","6"],0],
+ ["What is 5 + 5?",["10","8"],0],
+ ["What is 9 - 4?",["5","6"],0],
+ ["What comes after 19?",["20","18"],0],
+ ["Which is greater?",["8","3"],0]
+],
+memory:[
+ ["Remember: red, dog, 4. Which was the animal?",["Dog","Red"],0],
+ ["Remember: star, moon, sun. Which was second?",["Moon","Star"],0],
+ ["Remember: 3, 8, 5. Which was last?",["5","3"],0],
+ ["Remember: cat, tree, bird. Which was first?",["Cat","Bird"],0]
+],
+sequence:[
+ ["First, second, ...?",["Third","Fifth"],0],
+ ["What comes next: 2, 4, 6...?",["8","9"],0],
+ ["What comes next: A, B, A, B...?",["A","C"],0],
+ ["What comes next: 5, 10, 15...?",["20","18"],0]
+],
+pattern:[
+ ["⭐ 🌙 ⭐ 🌙 ...?",["⭐","🌙"],0],
+ ["🔴 🔵 🔴 🔵 ...?",["🔴","🟢"],0],
+ ["🐶 🐱 🐶 🐱 ...?",["🐶","🐰"],0],
+ ["1, 3, 1, 3...?",["1","2"],0]
+],
+spelling:[
+ ["Which is correct?",["Friend","Freind"],0],
+ ["Which spells the animal correctly?",["Horse","Hores"],0],
+ ["Which spells the feeling correctly?",["Happy","Hapy"],0],
+ ["Which spells the color correctly?",["Blue","Blu"],0]
+]};
+const quizPos={};
+function quiz(k){quizPos[k]=0;showQuizQuestion(k)}
+function showQuizQuestion(k){const list=Q[k],q=list[quizPos[k]%list.length],h=window.quizOut||window.learnOut;h.innerHTML=`<div class=result><h3>${q[0]}</h3>${q[1].map((a,i)=>`<button class=softbtn onclick="ans('${k}',${i},${q[2]})">${a}</button>`).join(" ")}<p id=qmsg></p><button id=nextQuestion class=action hidden onclick="nextQuizQuestion('${k}')">Next Question →</button></div>`}
+function ans(k,i,ok){let correct=i===ok;skills.push({date:new Date().toISOString(),skill:k,correct});localStorage.skills=JSON.stringify(skills);document.querySelectorAll('#quizOut .softbtn,#learnOut .softbtn').forEach(x=>x.disabled=true);const msg=document.getElementById('qmsg');if(msg)msg.textContent=correct?"Great work! ⭐":"Nice try. The answer is "+Q[k][quizPos[k]%Q[k].length][1][ok]+".";const next=document.getElementById('nextQuestion');if(next)next.hidden=false}
+function nextQuizQuestion(k){quizPos[k]=(quizPos[k]+1)%Q[k].length;showQuizQuestion(k)}
 function homework(){learnOut.innerHTML="<div class=result>1. What is the question asking?<br>2. What information do you have?<br>3. What is one small first step?</div>"}function showStrengths(){let g={};skills.filter(x=>x.correct).forEach(x=>g[x.skill]=(g[x.skill]||0)+1);let h=window.strengthOut||window.learnOut;if(h)h.innerHTML=Object.keys(g).length?Object.entries(g).map(x=>`<div class=result>⭐ <b>${x[0]}</b>: ${x[1]} successful practice moment(s)</div>`).join(""):"Complete activities and strengths will appear here."}
 function report(){if(!window.reportOut)return;let cut=Date.now()-7*86400000,s=skills.filter(x=>new Date(x.date).getTime()>=cut),f=feelings.filter(x=>new Date(x.date).getTime()>=cut);reportOut.innerHTML=`<div class=result><b>This week:</b><br>${s.length} learning practice activities<br>${f.length} feelings check-ins</div>`}
 document.querySelectorAll(".char").forEach(card=>{card.setAttribute("role","button");card.tabIndex=0;card.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();card.click()}})});setTheme(localStorage.companionTheme||"rose");restoreBackground();refresh();
