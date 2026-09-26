@@ -95,15 +95,44 @@ function speak(t){if(!("speechSynthesis"in window))return;stage.classList.add("t
 let recognition=null;
 function stopVoice(){if(recognition){try{recognition.stop()}catch(e){}recognition=null}if("speechSynthesis"in window)speechSynthesis.cancel();stage.classList.remove("talking","listening");status.textContent="💗 Ready..."}
 function companionReply(text){
-  const t=text.toLowerCase();
-  if(/sad|upset|cry|lonely|hurt/.test(t))return "I'm glad you told me. You don't have to handle that feeling all by yourself. We can take a slow breath together, or you can tell me a little more.";
-  if(/angry|mad|frustrat|annoy/.test(t))return "It sounds like something is really bothering you. Let's pause, take one slow breath, and then you can tell me what happened.";
-  if(/worried|worry|nervous|scared|afraid|anxious/.test(t))return "It's okay to feel worried. I'm here with you. Let's slow things down and take this one small step at a time.";
-  if(/happy|excited|good|great|fun/.test(t))return "I love hearing that! Tell me more about what made your day feel good.";
-  if(/school|homework|math|reading|spell/.test(t))return "I can help with that. Tell me what you're working on, and we'll take it one step at a time.";
-  if(/hello|hi|hey/.test(t))return "Hi! I'm happy you're here. What would you like to talk about?";
-  if(/thank/.test(t))return "You're very welcome. I'm always happy to listen.";
-  return "I hear you. Thank you for sharing that with me. Would you like to tell me a little more?";
+  const t=text.toLowerCase().replace(/[.!?,]/g,"").trim();
+  const replies=[
+    "I hear you. Thanks for talking with me. I'm right here with you.",
+    "Thanks for sharing that with me. We can talk about it together.",
+    "I'm listening. You can tell me what happened, or we can do something fun together.",
+    "I'm here with you. Let's take this one step at a time."
+  ];
+  if(/^(hi|hello|hey|good morning|good afternoon|good evening)\\b/.test(t))
+    return "Hi! I'm so happy you're here. What are you in the mood to talk about?";
+  if(/(sad|upset|cry|crying|lonely|hurt|bad day|feel terrible|feeling bad)/.test(t))
+    return "I'm sorry you're having a hard moment. You don't have to fix everything right now. I'm here with you. We can talk, breathe, or find something that helps you feel a little better.";
+  if(/(angry|mad|frustrat|annoy|hate|furious)/.test(t))
+    return "That sounds really frustrating. It's okay to have big feelings. Let's take one slow breath, and then you can tell me what happened.";
+  if(/(worried|worry|nervous|scared|afraid|anxious|stress|stressed)/.test(t))
+    return "It sounds like you're feeling worried. You are not alone right now. Let's slow things down together and focus on one small thing you can handle.";
+  if(/(happy|excited|great|awesome|wonderful|fun|good day|feeling good)/.test(t))
+    return "Yay! I love hearing that. Tell me what happened that made you feel so good.";
+  if(/(school|homework|math|reading|spell|spelling|science|project|assignment)/.test(t))
+    return "Absolutely! I can help you work through that. Tell me the question or problem you're working on, and we'll take it one step at a time.";
+  if(/(thank you|thanks|thx)/.test(t))
+    return "You're welcome! I'm always happy to spend time with you.";
+  if(/(who are you|what are you|your name)/.test(t))
+    return "I'm "+companion+", your friendly companion. I can listen, talk, play learning games, read stories, and help you calm down.";
+  if(/(i love you|love you)/.test(t))
+    return "Aww, that's very sweet. I'm happy to be your friendly companion.";
+  if(/(i like|my favorite|i love)/.test(t))
+    return "That sounds fun! I like learning about the things that matter to you. Tell me more.";
+  if(/(can you help|help me|i need help)/.test(t))
+    return "Yes, I can help you think through it. Tell me what's going on, and we'll figure out a small next step together.";
+  if(/(play|game|games)/.test(t))
+    return "Let's play! Open Games and choose a learning game, or tell me what kind of game you want.";
+  if(/(calm|breathe|breathing|relax)/.test(t))
+    return "Let's have a calm moment together. Breathe in slowly, and then breathe out even more slowly. You can do that with me.";
+  if(/(what can you do|what do you do)/.test(t))
+    return "I can listen and talk with you, help with feelings, practice schoolwork, play learning games, read stories, and guide calming activities.";
+  if(/(bye|goodbye|see you)/.test(t))
+    return "Bye for now! I'll be right here when you want some company.";
+  return replies[Math.floor(Math.random()*replies.length)];
 }
 function listenDemo(){
   stopVoice();
@@ -122,9 +151,10 @@ function listenDemo(){
   recognition.onresult=(event)=>{
     const heard=event.results[0][0].transcript.trim();
     stage.classList.remove("listening");
+    const reply=companionReply(heard);
     const bubble=document.querySelector(".bubble");
-    if(bubble)bubble.innerHTML="<b>🐾 "+companion+"</b><br><br><strong>You said:</strong> "+heard;
-    setTimeout(()=>speak(companionReply(heard)),250);
+    if(bubble)bubble.innerHTML="<b>🐾 "+companion+"</b><br><br>"+reply;
+    setTimeout(()=>speak(reply),250);
   };
   recognition.onerror=(event)=>{
     stage.classList.remove("listening");
