@@ -3,7 +3,7 @@
 const $ = id => document.getElementById(id);
 const companions = [
   {name:'Kya',role:'Support Dog',icon:'🐶'}, {name:'Luna',role:'Cat',icon:'🐱'},
-  {name:'Buddy',role:'Dog',icon:'🐕'}, {name:'Audrey',role:'Creative Kid',icon:'👧'},
+  {name:'Audrey',role:'Creative Kid',icon:'👧'},
   {name:'Ethan',role:'Friendly Kid',icon:'🧑'}, {name:'Nova',role:'Dreamer Kid',icon:'👧'},
   {name:'Remi',role:'Brave Kid',icon:'🧑'}, {name:'Ziggy',role:'Explorer Kid',icon:'🧒'}
 ];
@@ -53,7 +53,7 @@ function replyFor(message){const m=message.toLowerCase();if(/(hurt myself|kill m
 function show(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===view));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
 function selectCompanion(i){stopAll();state.companion=i;state.name=companions[i].name;updateCompanion();renderCompanions();syncStyleControls()}
-function renderCompanions(){const box=$('companions');box.replaceChildren();companions.forEach((c,i)=>{const button=document.createElement('button');button.className='companion'+(state.companion===i?' active':'');button.setAttribute('aria-pressed',String(state.companion===i));const icon=document.createElement('span');icon.className='avatar';if(i===0||kidLooks[c.name]){const img=document.createElement('img');img.src=i===0?'assets/friends-cutout.webp':kidSVG(c.name);img.alt='';icon.append(img)}else icon.textContent=c.icon;const title=document.createElement('strong');title.textContent=c.name;const role=document.createElement('small');role.textContent=c.role;button.append(icon,title,role);button.onclick=()=>selectCompanion(i);box.append(button)})}
+function renderCompanions(){const box=$('companions');box.replaceChildren();companions.forEach((c,i)=>{const button=document.createElement('button');button.className='companion'+(state.companion===i?' active':'');button.setAttribute('aria-pressed',String(state.companion===i));const icon=document.createElement('span');icon.className='avatar';if(i===0||kidLooks[c.name]){const img=document.createElement('img');img.src=i===0?'assets/friends-cutout.webp?v=20260925':kidSVG(c.name);img.alt='';icon.append(img)}else icon.textContent=c.icon;const title=document.createElement('strong');title.textContent=c.name;const role=document.createElement('small');role.textContent=c.role;button.append(icon,title,role);button.onclick=()=>selectCompanion(i);box.append(button)})}
 function updateCompanion(){const c=companions[state.companion],isKid=!!kidLooks[c.name];$('companionTitle').textContent=state.name;$('micBtn').textContent='🎙 Talk to '+state.name;$('patBtn').textContent=state.companion===0?'🐾 Give Kya a pat':'✨ Say hello';$('nameSetting').value=state.name;$('character').hidden=state.companion!==0;$('companionIcon').hidden=state.companion===0||isKid;$('kidCharacter').hidden=!isKid;if(isKid){$('kidPortrait').src=kidSVG(c.name);$('kidPortrait').alt=`Illustrated kid companion ${state.name}, dressed in ${currentLook().vibe} style with ${currentLook().accessory} accessory`}$('companionIcon').textContent=c.icon;$('bubble').textContent=`Hi, I’m ${state.name}. Want to tell me about your day?`}
 companions.forEach((c,i)=>$('companionSetting').add(new Option(c.name+' — '+c.role,String(i))));
 $('companionSetting').onchange=()=>selectCompanion(Number($('companionSetting').value));
