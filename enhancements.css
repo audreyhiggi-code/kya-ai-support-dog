@@ -85,3 +85,8 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 @keyframes eyeBlink{0%,45%,48%,100%{transform:scaleY(1)}46%,47%{transform:scaleY(.08)}}
 @keyframes accessoryBob{0%,100%{translate:0 0}50%{translate:0 -2px}}
 @media(prefers-reduced-motion:reduce){.animal-svg,.animal-svg .tail,.animal-svg .ears,.animal-svg .blink,.equipped-accessory{animation:none!important}}
+
+/* Full transparent companion portraits remain inside their cards and on the stage. */
+.photo-companion{display:block;object-fit:contain;object-position:center;max-width:100%;max-height:100%;padding:2%;height:100%;width:100%;user-select:none}
+.settings-chars .emoji .photo-companion{width:100%;height:100%;padding:0;filter:none}
+#avatar .live-animal .photo-companion{filter:drop-shadow(0 16px 15px #6d355040)}
