@@ -52,7 +52,7 @@ body{background:#f9e4e8}.app{width:min(96vw,1840px);max-width:1840px;margin:2vh 
 </div>
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeM()"><div class="modal"><button class="close" onclick="closeM()">×</button><div id="content"></div></div></div>
 <script>
-let companion="Kya",emo="",skills=JSON.parse(localStorage.skills||"[]"),feelings=JSON.parse(localStorage.feelings||"[]"),voices=[];
+let companion="Kya",emo="",skills=JSON.parse(localStorage.skills||"[]"),feelings=JSON.parse(localStorage.feelings||"[]"),voices=[],chatHistory=[];
 const screens={
 talk:`<h2>🎙️ Talk to <span class=cn></span></h2><p>Tell your companion about your day or just have some company.</p><button class=action onclick="speak('I am right here with you. What would you like to talk about?')">🔊 Talk Back</button>`,
 calm:`<h2>🫁 Help Me Calm Down</h2><div class=grid><button class=card onclick="calm('Take a slow breath in... and slowly breathe out.')"><b>🌬️ Breathe With Me</b></button><button class=card onclick="calm('Name five things you see, four you can feel, three you hear, two you smell, and one thing that helps you feel cared for.')"><b>🌿 5-4-3-2-1</b></button><button class=card onclick="calm('You do not have to explain anything. I can sit quietly with you.')"><b>🐾 Quiet Time</b></button></div><div id=out></div>`,
@@ -134,6 +134,33 @@ function companionReply(text){
     return "Bye for now! I'll be right here when you want some company.";
   return replies[Math.floor(Math.random()*replies.length)];
 }
+async function askKyaAI(heard){
+  const message=String(heard||"").trim();
+  if(!message)return;
+  chatHistory.push({role:"user",content:message});
+  chatHistory=chatHistory.slice(-12);
+  try{
+    const response=await fetch("/api/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({companion,messages:chatHistory})
+    });
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok||!data.reply)throw new Error(data.error||"AI unavailable");
+    const reply=String(data.reply).trim();
+    chatHistory.push({role:"assistant",content:reply});
+    chatHistory=chatHistory.slice(-12);
+    const bubble=document.querySelector(".bubble");
+    if(bubble)bubble.innerHTML="<b>🐾 "+companion+"</b><br><br>"+reply;
+    speak(reply);
+  }catch(error){
+    console.error("Kya AI request failed",error);
+    const reply=companionReply(message);
+    const bubble=document.querySelector(".bubble");
+    if(bubble)bubble.innerHTML="<b>🐾 "+companion+"</b><br><br>"+reply;
+    speak(reply+" I can use my full AI conversation when the AI connection is turned on.");
+  }
+}
 function listenDemo(){
   stopVoice();
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -151,10 +178,8 @@ function listenDemo(){
   recognition.onresult=(event)=>{
     const heard=event.results[0][0].transcript.trim();
     stage.classList.remove("listening");
-    const reply=companionReply(heard);
-    const bubble=document.querySelector(".bubble");
-    if(bubble)bubble.innerHTML="<b>🐾 "+companion+"</b><br><br>"+reply;
-    setTimeout(()=>speak(reply),250);
+    status.textContent="🤖 Thinking...";
+    askKyaAI(heard);
   };
   recognition.onerror=(event)=>{
     stage.classList.remove("listening");
@@ -170,8 +195,15 @@ function listenDemo(){
       speak("I had trouble hearing you. Please try the microphone again.");
     }
   };
-  recognition.onend=()=>{stage.classList.remove("listening");if(status.textContent==="🎵 Listening...")status.textContent="💗 Ready...";};
-  try{recognition.start()}catch(e){recognition=null;stage.classList.remove("listening");status.textContent="💗 Ready...";}
+  recognition.onend=()=>{
+    stage.classList.remove("listening");
+    if(status.textContent==="🎵 Listening...")status.textContent="💗 Ready...";
+  };
+  try{recognition.start()}catch(e){
+    recognition=null;
+    stage.classList.remove("listening");
+    status.textContent="💗 Ready...";
+  }
 }
 function preview(){speak("Hi! I'm "+companion+". We can talk, learn, play, or calm down together.")}
 function calm(t){out.innerHTML=`<div class=result>${t}</div>`;speak(t)}function saveFeel(){if(!emo){msg.textContent="Choose a feeling first.";return}feelings.push({date:new Date().toISOString(),emotion:emo,level:level.value,what:what.value,help:help.value});localStorage.feelings=JSON.stringify(feelings);msg.textContent="Saved 💗"}function saveJournal(){let j=JSON.parse(localStorage.journals||"[]");j.push({date:new Date().toISOString(),text:jtext.value});localStorage.journals=JSON.stringify(j);jmsg.textContent="Saved privately on this device."}
