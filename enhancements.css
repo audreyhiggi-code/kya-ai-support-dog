@@ -92,3 +92,14 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 #avatar .live-animal .photo-companion{filter:drop-shadow(0 16px 15px #6d355040)}
 /* The live companion portrait must be transparent over the room, with no old sprite sheet beneath it. */
 #avatar .friend-portrait.live-animal{background-image:none;background-color:transparent}
+
+/* Wardrobe pieces scale with the visible portrait instead of staying tiny on desktop. */
+#avatar .friend-portrait.live-animal{container-type:inline-size}
+#avatar .equipped-accessory{font-size:clamp(72px,28cqw,116px);line-height:1}
+#avatar .equipped-accessory.face{font-size:clamp(72px,29cqw,112px)}
+#avatar .equipped-accessory.head{font-size:clamp(88px,35cqw,140px)}
+#avatar .equipped-accessory.neck{font-size:clamp(78px,30cqw,120px)}
+#avatar .equipped-accessory.accessory-necklace{font-size:clamp(65px,24cqw,96px)}
+#avatar .equipped-accessory.body{font-size:clamp(96px,38cqw,150px)}
+#avatar .equipped-accessory.legs{font-size:clamp(82px,32cqw,128px)}
+#avatar .equipped-accessory.feet{font-size:clamp(72px,26cqw,106px)}
