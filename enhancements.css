@@ -106,4 +106,5 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 
 @media(min-width:1101px){.bubble{right:305px;width:225px;min-width:0}}
 
+@media(min-width:1101px){.character{left:28%}}
 .stage[data-companion="luna"] #avatar .equipped-accessory.face{font-size:clamp(100px,34cqw,145px)}
