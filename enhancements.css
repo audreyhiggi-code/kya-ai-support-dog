@@ -47,20 +47,9 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 .enh-avatar .animal-svg{width:115px;height:125px;filter:drop-shadow(0 8px 7px #6d355033)}
 .enh-card:hover .animal-svg{animation:companionWiggle .65s ease-in-out infinite}
 
-/* Companion wardrobe */
-.dog{position:relative}.accessory-panel{position:absolute;z-index:9;right:18px;top:100px;width:255px;max-height:calc(100% - 125px);overflow:auto;padding:15px;border-radius:24px;background:#fff9fcf2;border:2px solid #f4cbd8;box-shadow:0 12px 30px #69334b30;backdrop-filter:blur(8px)}
-.accessory-title{font-size:27px;font-weight:900;color:var(--enh-accent);font-family:cursive}.accessory-sub{font-size:12px;color:#806e7b;margin:2px 0 8px}.accessory-points{display:inline-block;padding:6px 10px;border-radius:14px;background:var(--enh-wash);color:var(--enh-deep);font-weight:900;margin-bottom:9px}.accessory-list{display:grid;gap:7px}.accessory-item{display:flex;align-items:center;gap:9px;width:100%;padding:8px;border:2px solid #efd9e3;border-radius:15px;background:#fff;cursor:pointer;text-align:left}.accessory-item.unlocked:hover,.accessory-item.equipped{border-color:var(--enh-accent);background:var(--enh-wash)}.accessory-item.locked{opacity:.52;cursor:not-allowed}.accessory-icon{font-size:27px;width:36px;text-align:center}.accessory-item b,.accessory-item small{display:block}.accessory-item small{font-size:10px;color:#806e7b;margin-top:2px}.accessory-layer{position:absolute;inset:0;z-index:5;pointer-events:none}.equipped-accessory{position:absolute;z-index:2;font-size:48px;line-height:1;filter:drop-shadow(0 4px 3px #63354a40)}.equipped-accessory.face{font-size:42px}.equipped-accessory.head{font-size:52px}.equipped-accessory.body{font-size:58px}.equipped-accessory.legs{font-size:48px}.equipped-accessory.feet{font-size:43px}.accessory-reward{position:fixed;z-index:100;left:50%;top:16%;transform:translateX(-50%);padding:13px 20px;border-radius:22px;background:#fff;color:var(--enh-deep);border:3px solid var(--enh-accent);box-shadow:0 12px 30px #6d355044;font-weight:900;animation:rewardPop 2.4s ease both}.stage .accessory-layer{width:100%;height:100%}@keyframes rewardPop{0%{opacity:0;transform:translate(-50%,15px) scale(.8)}15%,80%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-20px) scale(1.03)}}
-@media(max-width:1050px){.accessory-panel{right:10px;width:220px}.character{width:42%;left:28%}.bubble{width:27%;min-width:230px}}
-@media(max-width:680px){.accessory-panel{position:absolute;top:auto;bottom:8px;right:8px;width:46%;max-height:245px;padding:9px}.accessory-title{font-size:20px}.accessory-item{padding:5px}.accessory-icon{font-size:21px}.accessory-item small{font-size:9px}.equipped-accessory{font-size:34px}.equipped-accessory.body{font-size:42px}}
-
-/* Right-side companion wardrobe */
-.accessory-panel{right:18px;top:96px;width:270px;max-height:calc(100% - 135px);overflow-y:auto}
-.accessory-list{grid-template-columns:1fr}
-.accessory-item{min-height:58px}
-.accessory-focus{animation:accessoryFocus 1.2s ease both}
-@keyframes accessoryFocus{0%{box-shadow:0 0 0 0 #d72d6866}45%{box-shadow:0 0 0 8px #d72d6826}100%{box-shadow:0 12px 30px #69334b30}}
+@media(max-width:1050px){.character{width:42%;left:28%}.bubble{width:27%;min-width:230px}}
 @media(min-width:1101px){.bubble{right:305px;width:23%;min-width:250px}.controls,.status{left:48%}}
-@media(max-width:680px){.accessory-panel{right:8px;top:auto;bottom:10px;width:48%;max-height:270px}.bubble{right:3%;width:44%}}
+@media(max-width:680px){.bubble{right:3%;width:44%}}
 
 
 /* Animated companion polish */
@@ -74,17 +63,13 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 .stage.talking .animal-svg{animation:talkBounce .48s ease-in-out infinite alternate}
 .stage.listening .animal-svg .tail{animation:tailWag .45s ease-in-out infinite}
 .stage:hover .animal-svg{animation-duration:2.2s}
-.accessory-layer{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:visible}
-.equipped-accessory{position:absolute;display:block;z-index:2;line-height:1;font-family:Arial,sans-serif;filter:drop-shadow(0 4px 3px #63354a40);animation:accessoryBob 2.5s ease-in-out infinite}
-.equipped-accessory.face{font-size:40px}.equipped-accessory.head{font-size:52px}.equipped-accessory.neck{font-size:48px}.equipped-accessory.body{font-size:58px}.equipped-accessory.legs{font-size:50px}.equipped-accessory.feet{font-size:44px}
 @keyframes companionFloat{0%,100%{transform:translateY(0) rotate(-.6deg) scale(1)}50%{transform:translateY(-11px) rotate(.8deg) scale(1.015)}}
 @keyframes companionWiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
 @keyframes talkBounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-6px) scale(1.015)}}
 @keyframes tailWag{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(8deg)}}
 @keyframes earBounce{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg)}}
 @keyframes eyeBlink{0%,45%,48%,100%{transform:scaleY(1)}46%,47%{transform:scaleY(.08)}}
-@keyframes accessoryBob{0%,100%{translate:0 0}50%{translate:0 -2px}}
-@media(prefers-reduced-motion:reduce){.animal-svg,.animal-svg .tail,.animal-svg .ears,.animal-svg .blink,.equipped-accessory{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.animal-svg,.animal-svg .tail,.animal-svg .ears,.animal-svg .blink{animation:none!important}}
 
 /* Full transparent companion portraits remain inside their cards and on the stage. */
 .photo-companion{display:block;object-fit:contain;object-position:center;max-width:100%;max-height:100%;padding:2%;height:100%;width:100%;user-select:none}
@@ -93,18 +78,7 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 /* The live companion portrait must be transparent over the room, with no old sprite sheet beneath it. */
 #avatar .friend-portrait.live-animal{background-image:none;background-color:transparent}
 
-/* Wardrobe pieces scale with the visible portrait instead of staying tiny on desktop. */
-#avatar .friend-portrait.live-animal{container-type:inline-size}
-#avatar .equipped-accessory{font-size:clamp(72px,28cqw,116px);line-height:1}
-#avatar .equipped-accessory.face{font-size:clamp(72px,29cqw,112px)}
-#avatar .equipped-accessory.head{font-size:clamp(88px,35cqw,140px)}
-#avatar .equipped-accessory.neck{font-size:clamp(78px,30cqw,120px)}
-#avatar .equipped-accessory.accessory-necklace{font-size:clamp(65px,24cqw,96px)}
-#avatar .equipped-accessory.body{font-size:clamp(96px,38cqw,150px)}
-#avatar .equipped-accessory.legs{font-size:clamp(82px,32cqw,128px)}
-#avatar .equipped-accessory.feet{font-size:clamp(72px,26cqw,106px)}
 
 @media(min-width:1101px){.bubble{right:305px;width:225px;min-width:0}}
 
 @media(min-width:1101px){.character{left:28%}}
-.stage[data-companion="luna"] #avatar .equipped-accessory.face{font-size:clamp(100px,34cqw,145px)}
