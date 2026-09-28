@@ -103,3 +103,5 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 #avatar .equipped-accessory.body{font-size:clamp(96px,38cqw,150px)}
 #avatar .equipped-accessory.legs{font-size:clamp(82px,32cqw,128px)}
 #avatar .equipped-accessory.feet{font-size:clamp(72px,26cqw,106px)}
+
+@media(min-width:1101px){.bubble{right:305px;width:225px;min-width:0}}
