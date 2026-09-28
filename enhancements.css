@@ -105,3 +105,5 @@ body{background:var(--enh-bg)!important;transition:background .25s}
 #avatar .equipped-accessory.feet{font-size:clamp(72px,26cqw,106px)}
 
 @media(min-width:1101px){.bubble{right:305px;width:225px;min-width:0}}
+
+.stage[data-companion="luna"] #avatar .equipped-accessory.face{font-size:clamp(100px,34cqw,145px)}
